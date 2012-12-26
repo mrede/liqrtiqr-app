@@ -1,0 +1,48 @@
+ .sign_out_button {
+    display:none;
+}
+
+.response {
+    color:red;
+    display:none;
+}
+.drink, .sml_drink {
+    float:left;
+}
+
+.clear {
+    clear: left;
+}
+
+.history {
+    background-color:white;
+    width: 100%;
+    height:64px;
+    overflow-x: none;
+}
+
+.inner {
+    
+}
+
+.ui-icon-my-test {
+    background: url("/icons/98-palette.png") no-repeat rgba(0, 0, 0, 0.4) !important;
+}
+
+.drinks {
+    background-color: white;
+}
+
+.graph {
+   width:100%;
+   height:200px;
+}
+
+/* test */
+.sml_drink.unsynced {
+    display:block;
+    width:40px;
+    height:64px;
+    background: url('http://liqrtiqr.com/images/unsynced.png') no-repeat
+}
+

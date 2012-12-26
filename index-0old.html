@@ -1,0 +1,174 @@
+<html manifest="/cache.manifest">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1"> 
+    <link rel="stylesheet" href="stylesheets/drinky.css" type="text/css" media="screen" />
+    
+
+    <link rel="stylesheet" href="stylesheets/jquery.mobile-1.0b2.min.css" />
+    <script src="javascripts/jquery-1.6.2.min.js"></script>
+    <script src="javascripts/jquery.mobile-1.0b2.min.js"></script>
+
+    
+    <script src='javascripts/drinky.js' ></script>
+    <script src='javascripts/flot.js' ></script>
+</head>
+<body>
+    <div id="main_page" data-role="page"> 
+        <div data-role="header">
+            <h1>LiqrTickr</h1>
+            <a href="#my_stats" id="stats_button" data-theme="b" class="ui-btn-right" data-icon="grid"><span id='unit_total'></span></a>
+        </div><!-- /header -->
+        <div class='drinks'>
+            <div class="ui-grid-b">
+                <div class="drink ui-block-a"><a href='' id='small_beer'><img width='80' src='/images/small_beer.png' /></a></div>
+                <div class="drink ui-block-b"><a href='' id='beer'><img width='80' src='/images/beer.png' /></a></div>
+                <div class="drink ui-block-c"><a href='' id='small_wine'><img width='80' src='/images/small_wine.png' /></a></div>
+
+            </div><!-- /grid-b -->
+            <div class="ui-grid-b">
+                <div class="drink ui-block-a"><a href='' id='wine'><img width='80' src='/images/wine.png' /></a></div>                
+                <div class="drink ui-block-b"><a href='' id='cocktail'><img width='80' src='/images/cocktail.png' /></a></div>
+                <div class="drink ui-block-c"><a href='' id='short'><img width='80' src='/images/short.png' /></a></div>
+            </div><!-- /grid-b -->
+            
+
+        </div>
+        
+        <hr />
+        <p>Drinks last 12 hours:</p>
+        <div class='history'>
+            <div class='inner'>
+
+            </div>
+        </div>
+        <div data-role="footer" data-position="fixed">
+            <div data-role="navbar">
+                <ul class='logged_out'>
+                    <li><a id="sync_but" data-icon="refresh" href="" data-role="button">Sync</a></li>
+ <!--                   <li><a id="stats_but" data-icon="grid" href="" data-role="button">Stats</a></li>-->
+                    <li><a id="sign_out_but" data-icon="delete" href="" data-role="button">Sign out</a></li>
+                    <li><a id="about_but2" data-icon="info" href="#about" data-role="button">About</a></li>
+                </ul>
+                <ul class='logged_in'>
+                    
+                    <li><a id="login_but" data-icon="gear" href="#login" data-role="button">Login</a></li>
+                    <li><a id="register_but" data-icon="gear" href="#register" data-role="button">Register</a></li>
+                    <li><a id="about_but" data-icon="info" href="#about" data-role="button">About</a></li>
+                </ul>
+            </div><!-- /navbar -->
+        </div><!-- /footer -->
+    </div>
+    <div id="about" data-role="page" data-add-back-btn="true"> 
+        <div data-role="header">
+            <h1>LiqrTickr: About</h1>
+        </div><!-- /header -->
+        <p>All about LiqrTickr</p>
+    </div>
+    <div id="login" data-role="page" data-add-back-btn="true">
+
+        <div data-role="header">
+            <h1>LiqrTickr - Login</h1>
+        </div><!-- /header -->
+
+        <div data-role="content">    
+            
+            <p>
+                <div class='login'>
+                <div class='response'>
+
+                </div>
+                <div data-role="fieldcontain" >
+                    <label for='user_email'>Email</label>
+                    <input id='user_email' type='text' name='user[email]' value=''/>
+                </div>
+                <div data-role="fieldcontain">
+                    <label for='user_password'>Password</label>
+                    <input id='user_password' type='password' name='user[password]' value=''/>
+                </div>
+                <a class='login_button' href="index.html" data-role="button" data-theme="b" data-inline="true">Login </a>
+            </div></p>        
+        </div><!-- /content -->
+
+        
+    </div><!-- /page -->
+    
+    <div id="register" data-role="page" data-add-back-btn="true">
+
+        <div data-role="header">
+            <h1>LiqrTickr - Register</h1>
+        </div><!-- /header -->
+
+        <div data-role="content">    
+            <p>
+                <div class='register'>
+                    <div class='response'>
+
+                    </div>
+                    <div data-role="fieldcontain" >
+                        <label for='user_email'>Email</label>
+                        <input id='user_email' type='text' name='user[email]' value=''/>
+                    </div>
+                    <div data-role="fieldcontain">
+                        <label for='user_password'>Password</label>
+                        <input id='user_password' type='password' name='user[password]' value=''/>
+                    </div>
+                    <div data-role="fieldcontain">
+                        <label for='user_password_conf'>Confirm Password</label>
+                        <input id='user_password_conf' type='password' name='user[password_confirmation]' value=''/>
+                    </div>
+                    <a class='register_button' data-role="button" data-theme="b" data-inline="true">Register</a>
+                </div>
+            </p>        
+        </div><!-- /content -->
+
+    </div><!-- /page -->
+    
+    <div id="drunk_info" data-role="page">
+        <div data-role="header">
+            <h1>Drink Info</h1>
+        </div><!-- /header -->
+            
+        <div data-role="content">
+            <p><img class='sml_drink' src='images/sml_beer.png' alt='drink' /><span class='drink_name'></span></p>
+            <p>Drank on: <span class='drink_time'></span></p>
+            <a class='delete_drink' data-role="button" data-theme="b" data-icon="minus" data-inline="true">Delete</a>
+            <a class='close' data-role="button" data-inline="true" data-rel="back">Close</a>                
+        </div>
+        
+    </div>
+    
+    <div id="my_stats" data-role="page" data-add-back-btn="true"> 
+        <div data-role="header">
+            <h1>LiqrTickr: My Stats</h1>
+        </div><!-- /header -->
+        <div class='stats'>
+            <p>
+                <button id='week_graph' data-role="button" data-inline="true">Week</button>
+                <button id='month_graph' data-inline="true">Month</button>
+                <button id='year_graph' data-inline="true">Year</button>
+            </p>
+            <p>
+                <div class='graph'></div>
+            </p>
+
+        </div>
+    </div>
+    
+    <div id="alert" data-role="page" data-add-back-btn="true">
+        <div data-role="header">
+            <h1>Offline</h1>
+        </div><!-- /header -->
+            
+        <div data-role="content">
+            <p></p>
+            
+            <a class='close' data-role="button" data-inline="true" data-rel="back">Close</a>                
+        </div>
+        
+    </div>
+    
+    
+    
+</body>
+
+</html>
