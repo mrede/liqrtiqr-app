@@ -25,8 +25,8 @@ drinkDb['short'] = {
     s: 1
 }
 
-var mainUrl = "http://liqrtiqr.com";
-//var mainUrl = "http://localhost:3000";
+//var mainUrl = "http://liqrtiqr.com";
+var mainUrl = "http://localhost:3000";
 
 
 var drinks = new Array();
@@ -329,7 +329,8 @@ var drinky = {
 
                 cMonth.data.push([i, thisTotal]);
             }
-            cMonth.label = yearStr[new Date(new Date().setMonth(3-m)).getMonth()];
+
+            cMonth.label = yearStr[new Date(new Date().setMonth(new Date().getMonth()-m)).getMonth()];
 
             months.push(cMonth);
         }
