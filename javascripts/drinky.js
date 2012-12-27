@@ -25,8 +25,8 @@ drinkDb['short'] = {
     s: 1
 }
 
-//var mainUrl = "http://liqrtiqr.com";
-var mainUrl = "http://localhost:3000";
+var mainUrl = "http://liqrtiqr.com";
+//var mainUrl = "http://localhost:3000";
 
 
 var drinks = new Array();
