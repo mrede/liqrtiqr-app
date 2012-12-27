@@ -321,7 +321,7 @@ var drinky = {
         var d = new Date().getDate();
 
         //var m, i;
-        for (m=0; m<numMonths; m++) {
+        for (m=(numMonths-1); m >= 0; m--) {
             var cMonth = new Array();
             cMonth.data = new Array();
             thisTotal = 0;
