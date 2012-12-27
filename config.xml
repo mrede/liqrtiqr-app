@@ -18,5 +18,11 @@
     </author>
 
     <preference name="phonegap-version" value="2.2.0" />
+    <preference name="fullscreen" value="true" />
+
+    <icon src="/images/icon.png" />
+    <icon src="/images/icon.png" width="57" height="57" />
+	<!--<icon src="icons/ios/icon-72.png" gap:platform="ios" width="72" height="72" />
+	<icon src="icons/ios/icon_at_2x.png" width="114" height="114" />-->
 
 </widget>
