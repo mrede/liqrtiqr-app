@@ -287,6 +287,7 @@ var drinky = {
 	
 	graphPlotWeek:function() {
 
+        $('.the_legend').html('');
         var plot = new Array();
         var ticks = new Array();
         
@@ -356,6 +357,7 @@ var drinky = {
 	},
 	
 	graphPlotMonth:function() {
+        $('.the_legend').html('');
 	    var plot = new Array();
         var ticks = new Array();
 	    //Plot Month
@@ -378,6 +380,7 @@ var drinky = {
 	},
 	
 	graphPlotYear:function() {
+        $('.the_legend').html('');
 	    var plot = new Array();
         var ticks = new Array();
         var yearStr = ['j', 'f', 'm', 'a', 'm', 'j', 'j', 'a', 's', 'o', 'n', 'd']
