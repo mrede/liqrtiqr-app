@@ -138,7 +138,7 @@ var drinky = {
     },
     
     /**
-     * Called when response from server arrives
+     * Called when syncing drinks response from server received
      */
     synced:function(data,a,d) {
         if (data != null && data.status == "ok") {
@@ -167,7 +167,7 @@ var drinky = {
             drinky.setUnsyncedDrinks(drinksObj);
             
         }
-        $.mobile.hidePageLoadingMsg();
+        drinky.showStats();
     },
     
     getMappedDrinks: function() {
@@ -397,6 +397,9 @@ var drinky = {
         });
 	},
 	
+    /**
+     * Called when receiving response from server to show stats
+     */
 	statsResponse:function(data,a,d) {
         if (data.status == "ok") {
             $.mobile.changePage("#my_stats")
@@ -441,6 +444,107 @@ var drinky = {
         $("p", dialog).html(obj.msg)
         $.mobile.changePage($('#alert'), 'slidedown', false, true);
 	},
+
+    /**
+     * Sync Drink action
+     */
+    syncDrinks: function() {
+        if (navigator.onLine) {
+            $.mobile.showPageLoadingMsg();
+            //build data
+            var data;
+            var prefix = 'dr_'
+        
+            var tmpDrinks = new Object();
+        
+            var drinksObj = drinky.getDrinks();
+            var keepDrinks = Array();
+
+            var now = new Date().getTime()-43200000;
+        
+            //get all unsynced drinks
+            for(i=0; i<drinksObj.length; i++) {
+                drink = drinksObj[i];
+
+                //check if we've tried to sync it before
+                if (!drink.s) {
+                
+                    if(tmpDrinks[prefix+drink.d]==undefined) {
+                        tmpDrinks[prefix+drink.d] = new Array();
+                    }
+                
+                    tmpDrinks[prefix+drink.d].push(drink.t);
+                    //set drinks to syncing
+                    drink.s = 1;
+                }
+                
+                //See if we should remove
+                if (drink.t < now) {
+                    //if synced then delete
+                    if (drink.s > 1) {
+
+                    } else {
+                        //keep it
+                        keepDrinks.push(drink);
+                    }
+                    //Hide it
+                    $('.history .inner .t_'+drink.t).remove();
+                } else {
+                    keepDrinks.push(drink);
+                }
+            
+            }
+        
+            //save drinkObj
+            drinky.setDrinks(keepDrinks);
+        
+            //Post
+            $.ajax({
+              type: 'POST',
+              url: mainUrl +'/sync/'+localStorage.getItem("auth_key")+'.json',
+              data: tmpDrinks,
+              success: drinky.synced,
+              dataType: 'json'
+            });
+
+        } else {
+            //Not online
+            drinky.showDialog(drinky.offlineAlert);
+        }
+    },
+
+    /** 
+     * Show stats action
+     */
+    showStats: function() {
+        //Load Stats
+        var auth_key = localStorage.getItem("auth_key");
+        
+        if (navigator.onLine) {
+            
+            if (auth_key == null) {
+                //Show logged in alert
+                drinky.showDialog(drinky.loggedOutAlert);
+                return false;
+            } else {
+                
+                $.ajax({
+                  type: 'POST',
+                  url: mainUrl + '/my_stats/'+localStorage.getItem("auth_key")+'.json',
+                  data: '',
+                  success: drinky.statsResponse,
+                  dataType: 'json'
+                });
+
+                $.mobile.showPageLoadingMsg();
+                return false;
+
+            }
+        } else {
+            drinky.showDialog(drinky.offlineAlert);
+            return false;
+        }
+    },
 	
 	init:function() {
         
@@ -500,68 +604,7 @@ var drinky = {
 	    });*/
 	    
 	    $('#sync_but').click(function() {
-	        if (navigator.onLine) {
-                $.mobile.showPageLoadingMsg();
-    	        //build data
-    	        var data;
-    	        var prefix = 'dr_'
-	        
-    	        var tmpDrinks = new Object();
-	        
-    	        var drinksObj = drinky.getDrinks();
-    	        var keepDrinks = Array();
-
-    	        var now = new Date().getTime()-43200000;
-            
-    	        //get all unsynced drinks
-    	        for(i=0; i<drinksObj.length; i++) {
-                    drink = drinksObj[i];
-
-                    //check if we've tried to sync it before
-                    if (!drink.s) {
-                    
-                        if(tmpDrinks[prefix+drink.d]==undefined) {
-                            tmpDrinks[prefix+drink.d] = new Array();
-                        }
-                    
-                        tmpDrinks[prefix+drink.d].push(drink.t);
-                        //set drinks to syncing
-                        drink.s = 1;
-                    }
-                    
-                    //See if we should remove
-                    if (drink.t < now) {
-                        //if synced then delete
-                        if (drink.s > 1) {
-    
-                        } else {
-                            //keep it
-                            keepDrinks.push(drink);
-                        }
-                        //Hide it
-                        $('.history .inner .t_'+drink.t).remove();
-                    } else {
-                        keepDrinks.push(drink);
-                    }
-                
-                }
-            
-                //save drinkObj
-                drinky.setDrinks(keepDrinks);
-            
-    	        //Post
-                $.ajax({
-                  type: 'POST',
-                  url: mainUrl +'/sync/'+localStorage.getItem("auth_key")+'.json',
-                  data: tmpDrinks,
-                  success: drinky.synced,
-                  dataType: 'json'
-                });
-
-            } else {
-                //Not online
-                drinky.showDialog(drinky.offlineAlert);
-            }
+	        drinky.syncDrinks();
             
 	    });
 
@@ -656,33 +699,7 @@ var drinky = {
         
         $('#stats_button').click(function() {
             
-            //Load Stats
-            var auth_key = localStorage.getItem("auth_key");
-            
-            if (navigator.onLine) {
-                
-                if (auth_key == null) {
-                    //Show logged in alert
-                    drinky.showDialog(drinky.loggedOutAlert);
-                    return false;
-                } else {
-                    
-                    $.ajax({
-                      type: 'POST',
-                      url: mainUrl + '/my_stats/'+localStorage.getItem("auth_key")+'.json',
-                      data: '',
-                      success: drinky.statsResponse,
-                      dataType: 'json'
-                    });
-
-                    $.mobile.showPageLoadingMsg();
-                    return false;
-
-                }
-            } else {
-                drinky.showDialog(drinky.offlineAlert);
-                return false;
-            }
+            drinky.showStats();
             
 
         });
