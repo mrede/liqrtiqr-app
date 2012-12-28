@@ -1,114 +1,116 @@
 //TODO turn this into json from server
-var drinkDb = new Array();
-drinkDb['beer'] = {
+
+var drinkDb = [];
+drinkDb.beer = {
     id: 1,
     s: 2.7
-}
-drinkDb['small_beer'] = {
+};
+drinkDb.small_beer = {
     id: 2,
     s: 1.5
-}
-drinkDb['wine'] = {
+};
+drinkDb.wine = {
     id: 3,
     s: 2.6
-}
-drinkDb['small_wine'] = {
+};
+drinkDb.small_wine = {
     id: 4,
     s: 1.3
-}
-drinkDb['cocktail'] = {
+};
+drinkDb.cocktail = {
     id: 5,
     s: 1.5
-}
-drinkDb['short'] = {
+};
+drinkDb.short = {
     id: 6,
     s: 1
-}
+};
 
-var mainUrl = "http://liqrtiqr.com";
+//var mainUrl = "http://liqrtiqr.com";
 //var mainUrl = "http://localhost:3000";
+var mainUrl = "http://10.0.0.11:3000";
 
 
-var drinks = new Array();
-Storage.prototype.setObject = function(key, value) {
+var drinks = [];
+Storage.prototype.setObject = function (key, value) {
     this.setItem(key, JSON.stringify(value));
-}
+};
 
-Storage.prototype.getObject = function(key) {
+Storage.prototype.getObject = function (key) {
     return this.getItem(key) && JSON.parse(this.getItem(key));
-}
+};
 
 
 var drinky = {
-    
-    weekStats:null,
-    monthStats:null,
-    yearStats:null,
-    
+
+    weekStats: null,
+    monthStats: null,
+    yearStats: null,
+
     offlineAlert: {
         title: "You are Offline",
         msg: "You are currently not online and cannot perform this action"
     },
-    
+
     loggedOutAlert: {
         title: "Please Log In",
         msg: "You are currently not logged in. You must be registered and logged in to view this page"
     },
-    
+
     /**
      * Get drinksobj
      */
-    getDrinks:function() {
+    getDrinks: function () {
         var drinksObj = localStorage.getObject('drinks');
-        if (drinksObj == undefined) {
-            drinksObj = new Array();
+        if (drinksObj === undefined) {
+            drinksObj = [];
         }
         return drinksObj;
     },
-    
+
     /**
      * Save drinks Obj
      */
-    setDrinks:function(drinksObj) {
+    setDrinks: function (drinksObj) {
         localStorage.setObject('drinks', drinksObj);
     },
-    
-    setUnsyncedDrinks:function(drinksObj) {
+
+    setUnsyncedDrinks: function (drinksObj) {
         /*var i;
         var c=0;
-        for(i=0; i<drinksObj.length; i++) {
+        for (i=0; i<drinksObj.length; i++) {
             if (!drinksObj[i].s) {
                 c++;
             }
         }
         $('#count_total').html(c);*/
     },
-    
-    setCounter:function(initialise) {
-        var ct = drinky.getTotalDrinks(initialise);
-        var str = ct+" Unit";
-        if (ct!=1) {
-            str+="s";
+
+    setCounter: function (initialise) {
+        var ct = drinky.getTotalDrinks(initialise),
+            str = ct + " Unit";
+        if (ct !== 1) {
+            str += "s";
         }
         $('#unit_total').html(str);
-       
-    },
-    
-    getTotalDrinks:function(initial) {
-        drink = new Array();
-        var t = 0;
-        //get time stamp for 12 hours ago
-        var halfDay = new Date().getTime()-43200000; //12 hours limit 43200000
 
-        //Get Drinks obj
-        var drinksObj = drinky.getDrinks();
-        var drink;
-        
+    },
+
+    getTotalDrinks: function (initial) {
+        var key,
+            t = 0,
+            //get time stamp for 12 hours ago
+            halfDay = new Date().getTime() - 43200000, //12 hours limit 43200000
+
+            //Get Drinks obj
+            drinksObj = drinky.getDrinks(),
+            drink;
+
         if (initial) {
             $('.history .inner').html('');
         }
 
-        for(key in drinksObj) {
+        for (key in drinksObj) {
 
             drink = drinksObj[key];
             if (drink.t < halfDay) {
@@ -140,7 +142,7 @@ var drinky = {
     /**
      * Called when syncing drinks response from server received
      */
-    synced:function(data,a,d) {
+    synced: function (data,a,d) {
         if (data != null && data.status == "ok") {
             //get drinks
             var drinksObj = drinky.getDrinks();
@@ -149,7 +151,7 @@ var drinky = {
             var inner = $('.history .inner');
 
             //loop through stamps and mark as synced
-            for(i=0; i<data.stamps.length; i++) {
+            for (i=0; i<data.stamps.length; i++) {
                 //loop through drinks and find match
                 stamp = data.stamps[i];
                 for (j=0; j<drinksObj.length; j++) {
@@ -170,15 +172,15 @@ var drinky = {
         drinky.showStats();
     },
     
-    getMappedDrinks: function() {
+    getMappedDrinks: function () {
         var map = Array();
-        for(drink in drinkDb) {
+        for (drink in drinkDb) {
             map[drinkDb[drink].id] = drink;
         }
         return map;
     },
     
-    loggedIn:function(data,a,d) {
+    loggedIn: function (data,a,d) {
 
         if (data.status == "ok") {
             //Store auth key
@@ -193,7 +195,7 @@ var drinky = {
             var d;
             //Load all drinks
             if (data.drinks!=null) {
-                for(drinks in data.drinks) {
+                for (drinks in data.drinks) {
                     var theDrink = data.drinks[drinks];
                     d = {
                         t: theDrink.t*1000,
@@ -215,7 +217,7 @@ var drinky = {
         $.mobile.hidePageLoadingMsg();
     },
     
-    registerResponse:function(data,a,d) {
+    registerResponse: function (data,a,d) {
         if (data.status == "ok") {
             //Store auth key
             localStorage.setItem("auth_key", data.auth_key);
@@ -226,7 +228,7 @@ var drinky = {
 
         } else {
             var errMsg = '';
-            for(key in data.msg) {
+            for (key in data.msg) {
                 for (err in data.msg[key]) {
                     errMsg+=key+": "+data.msg[key][err]+"<br />";
                 }
@@ -237,7 +239,7 @@ var drinky = {
         $.mobile.hidePageLoadingMsg();
     },
     
-    recordDrink:function(drink) {
+    recordDrink: function (drink) {
         var classes=' t_'+drink.t;
         if (!drink.s) {
             classes+=' unsynced';
@@ -251,7 +253,7 @@ var drinky = {
     /**
      * Check if we are logged in
      */
-    checkLogin:function() {
+    checkLogin: function () {
         if (localStorage.getItem("auth_key") != undefined) {
             //We're lgged in
             $(".logged_in").hide();
@@ -266,14 +268,14 @@ var drinky = {
 	/**
 	 * Sign out
 	 */
-	signOut:function() {
+	signOut: function () {
 	    localStorage.removeItem("auth_key");
 	    
 	    //remove synced drinks
 	    var drinksObj=localStorage.getObject('drinks');
 
 	    var outputArr = new Array();
-	    for(i=0; i<drinksObj.length; i++) {
+	    for (i=0; i<drinksObj.length; i++) {
 	        if (!drinksObj[i].s) {
 	            outputArr.push(drinksObj[i]);
 	        }
@@ -285,32 +287,93 @@ var drinky = {
 	    drinky.checkLogin();
 	},
 	
-	graphPlotWeek:function() {
+	graphPlotWeek: function () {        
+        $('#the_graph').html('');
 
-        $('.the_legend').html('');
-        var plot = new Array();
-        var ticks = new Array();
+        var plot = new Array(),
+        ticks = new Array(),
+        maxValue = 0,
+        numYTicks = 0,
+        yTicks = new Array();
         
         //Plot year of weeks
         for (i=51; i>=0; i--) {
-            plot.push([51-i, drinky.weekStats[i]]);
-            ticks.push([51-i, i+1]);
+            plot.push(drinky.weekStats[i]);
+            ticks.push(51-i);
+            if (maxValue < drinky.weekStats[i]) {
+                maxValue = drinky.weekStats[i];
+            }
         }
-        $.plot($(".graph"), [ plot ], {
-            xaxis: {
-                ticks: ticks
+
+        // Get the number of yTicks
+        numYTicks = Math.ceil((maxValue+5)/5);
+        for (i=0; i<numYTicks; i++) {
+            yTicks.push(i*5);
+        }
+
+        var plot1 = $.jqplot('the_graph', [plot], {
+            // The "seriesDefaults" option is an options object that will
+            // be applied to all series in the chart.
+            seriesDefaults:{
+                renderer:$.jqplot.BarRenderer,
+                rendererOptions: {
+                    barPadding: 8,      // number of pixels between adjacent bars in the same
+                                        // group (same category or bin).
+                    barMargin: 2,      // number of pixels between adjacent groups of bars.
+                    barDirection: 'vertical', // vertical or horizontal.
+                    barWidth: null,     // width of the bars.  null to calculate automatically.
+                    shadowOffset: 2,    // offset from the bar edge to stroke the shadow.
+                    shadowDepth: 2,     // nuber of strokes to make for the shadow.
+                    shadowAlpha: 0.1,   // transparency of the shadow.
+                }
             },
-            bars: { show: true },
-            legend: { 
-                container: '.the_legend',
-                show: false, 
+            axesDefaults: {
+                tickRenderer: $.jqplot.CanvasAxisTickRenderer ,
                 
+                
+            },
+    
+            // Custom labels for the series are specified with the "label"
+            // option on the series option.  Here a series option object
+            // is specified for each series.
+            series:[
+                {label:'Units'},
+
+            ],
+            // Show the legend and put it outside the grid, but inside the
+            // plot container, shrinking the grid to accomodate the legend.
+            // A value of "outside" would not shrink the grid and allow
+            // the legend to overflow the container.
+            legend: {
+                show: true,
+                placement: 'insideGrid'
+            },
+            axes: {
+                // Use a category axis on the x axis and use our custom ticks.
+                xaxis: {
+                    renderer: $.jqplot.CategoryAxisRenderer,
+                    ticks: ticks,
+                    tickOptions: {
+                        angle: -90,
+                        fontSize: '7pt'
+                    }
+                },
+                // Pad the y axis just a little so bars can get close to, but
+                // not touch, the grid boundaries.  1.2 is the default padding.
+                yaxis: {
+                    
+                    ticks: yTicks
+                }
             }
         });
-        console.log("Sizes", plot.length, ticks.length)
+
 	},
 	
-	graphPlotCompareMonth:function() {
+    /**
+     * Compare months line graph
+     */
+	graphPlotCompareMonth: function () {
+        $('#the_graph').html('');
         var yearStr = [
             'jan', 'feb', 'mar', 'apr', 'may', 'jun', 
             'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
@@ -319,88 +382,198 @@ var drinky = {
         var months = new Array();
         var lastTotal = 0;
         var d = new Date().getDate();
+        var ticks = new Array(),
+        maxValue = 0,
+        numYTicks = 0,
+        yTicks = new Array();
 
         //var m, i;
         for (m=(numMonths-1); m >= 0; m--) {
             var cMonth = new Array();
             cMonth.data = new Array();
+            aMonth = new Array();
             thisTotal = 0;
             for (i=0; i<31; i++) {
-                thisTotal += drinky.compareStats[m][i]/100;
+                val = drinky.compareStats[m][i]/100;
+                if (!isNaN(val)) {
+                    thisTotal += drinky.compareStats[m][i]/100;
+                }
 
-                cMonth.data.push([i, thisTotal]);
+                aMonth.push(thisTotal);
             }
 
-            cMonth.label = yearStr[new Date(new Date().setMonth(new Date().getMonth()-m)).getMonth()];
+            //Get max value of drinks
+            if (maxValue < thisTotal) {
+                maxValue = thisTotal;
+            }
 
-            months.push(cMonth);
+
+            months.push(aMonth);
+            var o = new Object();
+            o.label = yearStr[new Date(new Date().setMonth(new Date().getMonth()-m)).getMonth()];;
+            o.showMarker = false;
+            ticks.push(o);
         }
 
-        var ticks = new Array();
-	    //Plot Month
-        for (i=0; i<31; i++) {
-            if (i%5==0) {
-                ticks.push([i, i]);
-            } 
+        // Get the number of yTicks
+        numYTicks = Math.ceil((maxValue+5)/5);
+        for (i=0; i<numYTicks; i++) {
+            yTicks.push(i*5);
         }
-        $.plot($(".graph"), months, {
-            xaxis: {
-                ticks: ticks
-            },
+
+        
+        var plot1 = $.jqplot ('the_graph', months, {
+            series: ticks,
+            // Show the legend and put it outside the grid, but inside the
+            // plot container, shrinking the grid to accomodate the legend.
+            // A value of "outside" would not shrink the grid and allow
+            // the legend to overflow the container.
             legend: {
-                noColumns: 1,
-                container: '.the_legend',
-                position: 'right'
+                show: true,
+                placement: 'outsideGrid'
+            },
+            axesDefaults: {
+                tickRenderer: $.jqplot.CanvasAxisTickRenderer ,
+                
+            },
+            axes: {
+                // Use a category axis on the x axis and use our custom ticks.
+                xaxis: {
+                    pad: 0,
+                    renderer: $.jqplot.CategoryAxisRenderer,
+                    ticks: cMonth,
+                    tickOptions: {
+                      angle: -90,
+                      fontSize: '7pt'
+                    }
+                },
+                // Pad the y axis just a little so bars can get close to, but
+                // not touch, the grid boundaries.  1.2 is the default padding.
+                yaxis: {
+                    pad: 0,
+                    ticks: yTicks,
+                    //tickOptions: {formatString: '$%d'}
+                }
             }
-           
         });
 	},
 	
-	graphPlotMonth:function() {
-        $('.the_legend').html('');
+	graphPlotMonth: function () {
+        $('#the_graph').html('');
 	    var plot = new Array();
         var ticks = new Array();
 	    //Plot Month
         for (i=0; i<28; i++) {
-            plot.push([i, drinky.monthStats[i][1]]);
-            if (i%5==0) {
-                ticks.push([i, drinky.monthStats[i][0]]);
-            } else {
-//                    ticks.push([i, '');
-            }
-            
-            
+            plot.push(drinky.monthStats[i][1]);
+            ticks.push(drinky.monthStats[i][0]); 
         }
-        $.plot($(".graph"), [ plot ], {
-            xaxis: {
-                ticks: ticks
+        
+        var plot1 = $.jqplot('the_graph', [plot], {
+            // The "seriesDefaults" option is an options object that will
+            // be applied to all series in the chart.
+            axesDefaults: {
+                tickRenderer: $.jqplot.CanvasAxisTickRenderer ,
+                
             },
-            bars: { show: true }
+            seriesDefaults:{
+                renderer:$.jqplot.BarRenderer,
+                rendererOptions: {fillToZero: true}
+            },
+            // Custom labels for the series are specified with the "label"
+            // option on the series option.  Here a series option object
+            // is specified for each series.
+            series:[
+                {label:'Units'},
+
+            ],
+            // Show the legend and put it outside the grid, but inside the
+            // plot container, shrinking the grid to accomodate the legend.
+            // A value of "outside" would not shrink the grid and allow
+            // the legend to overflow the container.
+            legend: {
+                show: true,
+                placement: 'insideGrid'
+            },
+            axes: {
+                // Use a category axis on the x axis and use our custom ticks.
+                xaxis: {
+                    renderer: $.jqplot.CategoryAxisRenderer,
+                    ticks: ticks,
+                    tickOptions: {
+                        angle: -90,
+                        fontSize: '7pt'
+                   }
+                },
+                // Pad the y axis just a little so bars can get close to, but
+                // not touch, the grid boundaries.  1.2 is the default padding.
+                yaxis: {
+                    pad: 0,
+                }
+            }
         });
 	},
 	
-	graphPlotYear:function() {
-        $('.the_legend').html('');
+    /**
+     * Last Year Stats
+     */
+	graphPlotYear: function () {
+        $('#the_graph').html('');
 	    var plot = new Array();
         var ticks = new Array();
-        var yearStr = ['j', 'f', 'm', 'a', 'm', 'j', 'j', 'a', 's', 'o', 'n', 'd']
+        var yearStr = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec']
 	    //Plot Month
         for (i=0; i<12; i++) {
-            plot.push([i, drinky.yearStats[i][1]]);
-            ticks.push([i, yearStr[drinky.yearStats[i][0]-1]]);
+            plot.push(drinky.yearStats[i][1]);
+            ticks.push(yearStr[drinky.yearStats[i][0]-1]);
         }
-        $.plot($(".graph"), [ plot ], {
-            xaxis: {
-                ticks: ticks
+        var plot1 = $.jqplot('the_graph', [plot], {
+            // The "seriesDefaults" option is an options object that will
+            // be applied to all series in the chart.
+            seriesDefaults:{
+                renderer:$.jqplot.BarRenderer,
+                rendererOptions: {fillToZero: true}
             },
-            bars: { show: true }
+            axesDefaults: {
+                tickRenderer: $.jqplot.CanvasAxisTickRenderer ,
+            },
+            // Custom labels for the series are specified with the "label"
+            // option on the series option.  Here a series option object
+            // is specified for each series.
+            series:[
+                {label:'Units'},
+
+            ],
+            // Show the legend and put it outside the grid, but inside the
+            // plot container, shrinking the grid to accomodate the legend.
+            // A value of "outside" would not shrink the grid and allow
+            // the legend to overflow the container.
+            legend: {
+                show: true,
+                placement: 'insideGrid'
+            },
+            axes: {
+                // Use a category axis on the x axis and use our custom ticks.
+                xaxis: {
+                    renderer: $.jqplot.CategoryAxisRenderer,
+                    ticks: ticks,
+                    tickOptions: {
+                        angle: -90,
+                        fontSize: '7pt'
+                    }
+                },
+                // Pad the y axis just a little so bars can get close to, but
+                // not touch, the grid boundaries.  1.2 is the default padding.
+                yaxis: {
+                    pad: 0,
+                }
+            }
         });
 	},
 	
     /**
      * Called when receiving response from server to show stats
      */
-	statsResponse:function(data,a,d) {
+	statsResponse: function (data,a,d) {
         if (data.status == "ok") {
             $.mobile.changePage("#my_stats")
 	        //Weeks
@@ -416,17 +589,17 @@ var drinky = {
             var plot = new Array();
             var ticks = new Array();
 
-            $.plot($(".graph"), [ plot ], {
+            /*$.plot($(".graph"), [ plot ], {
                 xaxis: {
                     ticks: ticks
                 }
-            });
+            });*/
             
 	    }
 	    $.mobile.hidePageLoadingMsg();
 	},
 	
-	validateLogin: function(data,a,d) {
+	validateLogin: function (data,a,d) {
         if (data.status == "ok") {
             //login ok
         } else {
@@ -437,7 +610,7 @@ var drinky = {
         $.mobile.hidePageLoadingMsg();
 	},
 	
-	showDialog: function(obj) {
+	showDialog: function (obj) {
 	    var dialog = $('#alert');
         //Set title
         $("h1", dialog).html(obj.title);
@@ -448,7 +621,7 @@ var drinky = {
     /**
      * Sync Drink action
      */
-    syncDrinks: function() {
+    syncDrinks: function () {
         if (navigator.onLine) {
             $.mobile.showPageLoadingMsg();
             //build data
@@ -463,7 +636,7 @@ var drinky = {
             var now = new Date().getTime()-43200000;
         
             //get all unsynced drinks
-            for(i=0; i<drinksObj.length; i++) {
+            for (i=0; i<drinksObj.length; i++) {
                 drink = drinksObj[i];
 
                 //check if we've tried to sync it before
@@ -516,7 +689,7 @@ var drinky = {
     /** 
      * Show stats action
      */
-    showStats: function() {
+    showStats: function () {
         //Load Stats
         var auth_key = localStorage.getItem("auth_key");
         
@@ -546,7 +719,7 @@ var drinky = {
         }
     },
 	
-	init:function() {
+	init: function () {
         
         //Init Modernizr
 	    //Modernizr.load();
@@ -566,7 +739,7 @@ var drinky = {
             drinky.checkLogin();
         }
 
-	    $('div.drinks a').click(function() {
+	    $('div.drinks a').click(function () {
 	        var now = new Date().getTime();
             var drink = $(this).attr('id');
 	        //localStorage.setItem(now, drink);
@@ -592,7 +765,7 @@ var drinky = {
 	        return false;
 	    });
 	    
-/*	    $('button.clear_button').click(function() {
+/*	    $('button.clear_button').click(function () {
 	        var answer = confirm("Clear all unsynced drinks?")
             if (answer){
 	            localStorage.clear();
@@ -603,12 +776,12 @@ var drinky = {
             }
 	    });*/
 	    
-	    $('#sync_but').click(function() {
+	    $('#sync_but').click(function () {
 	        drinky.syncDrinks();
             
 	    });
 
-        $('.login_button').click(function() {
+        $('.login_button').click(function () {
             $(".login .response").slideUp();
             $.mobile.showPageLoadingMsg();
 
@@ -624,7 +797,7 @@ var drinky = {
             return false;
         });
         
-        $('.register_button').click(function() {
+        $('.register_button').click(function () {
             $(".register .response").slideUp();
             $.mobile.showPageLoadingMsg();
             $.post(
@@ -638,7 +811,7 @@ var drinky = {
         })
         
         //Small drinnk click
-        $('.sml_drink').live('click', function() {
+        $('.sml_drink').live('click', function () {
 
             var targetDrink = $(this);
             var drinkObj = $(this).data('info');
@@ -654,12 +827,12 @@ var drinky = {
             
             $('.delete_drink').unbind('click');
             //Add delete back
-            $('.delete_drink').click(function() {
+            $('.delete_drink').click(function () {
                 //Delete this item from the drinks
                 var drinksObj = drinky.getDrinks();
                 var newDrinkObj = Array();
 
-                for(key in drinksObj) {
+                for (key in drinksObj) {
                     testDrink = drinksObj[key];
                     if (testDrink.t != drinkObj.t) {
                         newDrinkObj.push(testDrink);
@@ -693,18 +866,19 @@ var drinky = {
         });
         
         //signout button
-        $('#sign_out_but').click(function() {
+        $('#sign_out_but').click(function () {
             drinky.signOut();
         });
         
-        $('#stats_button').click(function() {
+        $('#stats_button').click(function () {
             
-            drinky.showStats();
+            //drinky.showStats();
+            drinky.syncDrinks();
             
 
         });
         
-        $('#week_graph').click(function() {
+        $('#week_graph').click(function () {
             drinky.graphPlotWeek()
         });
         
