@@ -287,7 +287,10 @@ var drinky = {
 	    drinky.checkLogin();
 	},
 	
-	graphPlotWeek: function () {        
+    currentGraph: null,
+
+	graphPlotWeek: function () {  
+        drinky.currentGraph = drinky.graphPlotWeek;
         $('#the_graph').html('');
 
         var plot = new Array(),
@@ -373,6 +376,7 @@ var drinky = {
      * Compare months line graph
      */
 	graphPlotCompareMonth: function () {
+        drinky.currentGraph = drinky.graphPlotWeek;
         $('#the_graph').html('');
         var yearStr = [
             'jan', 'feb', 'mar', 'apr', 'may', 'jun', 
@@ -459,6 +463,7 @@ var drinky = {
 	},
 	
 	graphPlotMonth: function () {
+        drinky.currentGraph = drinky.graphPlotWeek;
         $('#the_graph').html('');
 	    var plot = new Array();
         var ticks = new Array();
@@ -517,6 +522,7 @@ var drinky = {
      * Last Year Stats
      */
 	graphPlotYear: function () {
+        drinky.currentGraph = drinky.graphPlotWeek;
         $('#the_graph').html('');
 	    var plot = new Array();
         var ticks = new Array();
@@ -719,7 +725,7 @@ var drinky = {
         }
     },
 
-    doOnOrientationChange: function () {
+    doOnOrientationChange: function (orientation) {
         switch(window.orientation) 
         {  
           case -90:
@@ -730,6 +736,11 @@ var drinky = {
             alert('portrait');
             break; 
         }
+
+        if (drinky.currentGraph !== null) {
+            alert("Doing it"+ drinky.currentGraph );
+            drinky.currentGraph();
+        }
     },
     
 
@@ -737,9 +748,18 @@ var drinky = {
 	
 	init: function () {
 
-        window.onorientationchange = function() {
+        /*window.onorientationchange = function() {
             drinky.doOnOrientationChange();
-        };
+        };*/
+
+       // $(window).bind('orientationchange', drinky.doOnOrientationChange);
+        $(window).resize(function() {
+  // add the stuff here to execute the your slider again;
+  if (drinky.currentGraph !== null) {
+            
+            drinky.currentGraph();
+        }
+});
         
         //Init Modernizr
 	    //Modernizr.load();
