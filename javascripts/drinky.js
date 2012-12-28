@@ -718,8 +718,28 @@ var drinky = {
             return false;
         }
     },
+
+    doOnOrientationChange: function () {
+        switch(window.orientation) 
+        {  
+          case -90:
+          case 90:
+            alert('landscape');
+            break; 
+          default:
+            alert('portrait');
+            break; 
+        }
+    },
+    
+
+  
 	
 	init: function () {
+
+        window.onorientationchange = function() {
+            drinky.doOnOrientationChange();
+        };
         
         //Init Modernizr
 	    //Modernizr.load();
