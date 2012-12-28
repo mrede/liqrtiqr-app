@@ -376,7 +376,7 @@ var drinky = {
      * Compare months line graph
      */
 	graphPlotCompareMonth: function () {
-        drinky.currentGraph = drinky.graphPlotWeek;
+        drinky.currentGraph = drinky.graphPlotCompareMonth;
         $('#the_graph').html('');
         var yearStr = [
             'jan', 'feb', 'mar', 'apr', 'may', 'jun', 
@@ -463,7 +463,7 @@ var drinky = {
 	},
 	
 	graphPlotMonth: function () {
-        drinky.currentGraph = drinky.graphPlotWeek;
+        drinky.currentGraph = drinky.graphPlotMonth;
         $('#the_graph').html('');
 	    var plot = new Array();
         var ticks = new Array();
@@ -522,7 +522,7 @@ var drinky = {
      * Last Year Stats
      */
 	graphPlotYear: function () {
-        drinky.currentGraph = drinky.graphPlotWeek;
+        drinky.currentGraph = drinky.graphPlotYear;
         $('#the_graph').html('');
 	    var plot = new Array();
         var ticks = new Array();
@@ -748,21 +748,14 @@ var drinky = {
 	
 	init: function () {
 
-        /*window.onorientationchange = function() {
-            drinky.doOnOrientationChange();
-        };*/
-
        // $(window).bind('orientationchange', drinky.doOnOrientationChange);
         $(window).resize(function() {
-  // add the stuff here to execute the your slider again;
-  if (drinky.currentGraph !== null) {
-            
-            drinky.currentGraph();
-        }
-});
+            // add the stuff here to execute the your slider again;
+            if (drinky.currentGraph !== null) {
+                drinky.currentGraph();
+            }
+        });
         
-        //Init Modernizr
-	    //Modernizr.load();
 	    
 	    var authKey = localStorage.getItem('auth_key');
 	    if (authKey!=undefined && navigator.onLine) {
