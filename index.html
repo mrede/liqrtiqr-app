@@ -10,10 +10,22 @@
   
   
   <script src="phonegap.js"></script>
-  <script src="javascripts/jquery-1.6.2.min.js"></script>
+  <script src="javascripts/jquery.min.js"></script>
   <script src="javascripts/jquery.mobile-1.0b2.min.js"></script>
   <script src='javascripts/drinky.js' ></script>
-  <script src='javascripts/flot.js' ></script>
+  <script src='javascripts/jquery.jqplot.min.js' ></script>
+
+  <script type="text/javascript" src="javascripts/plugins/jqplot.barRenderer.min.js"></script>
+  <script type="text/javascript" src="javascripts/plugins/jqplot.categoryAxisRenderer.min.js"></script>
+  <script type="text/javascript" src="javascripts/plugins/jqplot.pointLabels.min.js"></script>
+
+  <script type="text/javascript" src="javascripts/plugins/jqplot.dateAxisRenderer.min.js"></script>
+  <script type="text/javascript" src="javascripts/plugins/jqplot.canvasTextRenderer.min.js"></script>
+  <script type="text/javascript" src="javascripts/plugins/jqplot.canvasAxisTickRenderer.min.js"></script>
+
+
+
+  <link rel="stylesheet" type="text/css" href="stylesheets/jquery.jqplot.css" />
 
   
 </head>
@@ -148,8 +160,8 @@
        <div class='stats'>
 
            <p>
-               <div class='graph'></div>
-               <div class='the_legend'></div>
+               <div id="the_graph" class='graph'></div>
+               
            </p>
 
     </div>
