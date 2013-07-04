@@ -62,7 +62,7 @@ var drinky = {
      */
     getDrinks: function () {
         var drinksObj = localStorage.getObject('drinks');
-        if (drinksObj === undefined) {
+        if (drinksObj === undefined || drinksObj == null) {
             drinksObj = [];
         }
         return drinksObj;
@@ -428,6 +428,8 @@ var drinky = {
         
         var plot1 = $.jqplot ('the_graph', months, {
             series: ticks,
+            seriesColors: [ "#d6e9ca", "#afcb7f", "#c0be63", "#dca73d", "#f6901f", "#eb1600",
+        "#953579", "#4b5de4", "#d8b83f", "#ff5800", "#0085cc"],  // colors that will    
             // Show the legend and put it outside the grid, but inside the
             // plot container, shrinking the grid to accomodate the legend.
             // A value of "outside" would not shrink the grid and allow
