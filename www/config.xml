@@ -1,16 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <widget id="com.ede.pg.liqrtiqr" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>LiqrTiqr</name>
-    <description>
-        A sample Apache Cordova application that responds to the deviceready event.
-    </description>
-    <author email="dev@cordova.apache.org" href="http://cordova.io">
-        Apache Cordova Team
-    </author>
-    <content src="index.html" />
-    <access origin="*" />
-
-    <name>LiqrTiqr</name>
 
     <description>
         LiqrTiqr v2
@@ -19,6 +9,11 @@
     <author href="http://www.thisislabel.co.uk" email="ben.ede@gmail.com">
         Ben
     </author>
+    
+    <content src="index.html" />
+    <access origin="*" />
+
+    
 
     <preference name="phonegap-version" value="2.9.0" />
     <preference name="fullscreen" value="true" />
