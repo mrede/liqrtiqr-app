@@ -528,11 +528,18 @@ var drinky = {
         $('#the_graph').html('');
 	    var plot = new Array();
         var ticks = new Array();
-        var yearStr = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec']
+        var yearStr = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
+        var monthNum = 0;
 	    //Plot Month
-        for (i=0; i<12; i++) {
+        for (i=0; i<24; i++) {
             plot.push(drinky.yearStats[i][1]);
-            ticks.push(yearStr[drinky.yearStats[i][0]-1]);
+            
+            monthNum = drinky.yearStats[i][0]-1;
+            if (monthNum>11) {
+                monthNum-=12;
+            }
+            console.log("Y:", drinky.yearStats[i][1], yearStr[monthNum], monthNum)
+            ticks.push(yearStr[monthNum]);
         }
         var plot1 = $.jqplot('the_graph', [plot], {
             // The "seriesDefaults" option is an options object that will
@@ -543,6 +550,7 @@ var drinky = {
             },
             axesDefaults: {
                 tickRenderer: $.jqplot.CanvasAxisTickRenderer ,
+                min: 0
             },
             // Custom labels for the series are specified with the "label"
             // option on the series option.  Here a series option object
