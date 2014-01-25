@@ -26,8 +26,8 @@ drinkDb.short = {
     s: 1
 };
 
-var mainUrl = "http://liqrtiqr.com";
-//var mainUrl = "http://localhost:3000";
+//var mainUrl = "http://liqrtiqr.com";
+var mainUrl = "http://localhost:3000";
 //var mainUrl = "http://10.0.0.11:3000";
 
 
@@ -147,20 +147,23 @@ var drinky = {
             //get drinks
             var drinksObj = drinky.getDrinks();
             //Remove all unsynced drinks
-            
+            //console.log("Drink length: ", drinksObj.length)
             var inner = $('.history .inner');
 
             //loop through stamps and mark as synced
             for (i=0; i<data.stamps.length; i++) {
                 //loop through drinks and find match
+
                 stamp = data.stamps[i];
+                //console.log("Stamp: ", stamp)
                 for (j=0; j<drinksObj.length; j++) {
                     var drinkObj = drinksObj[j];
-                    if (drinkObj.t == stamp) {
+                    if (drinkObj.t == stamp && drinkObj.s != 2) {
+                        //console.log("Found drink: ", drinkObj, i, j)
                         drinkObj.s = 2;
 
                         $('.sml_drink.unsynced.t_'+drinkObj.t, inner).removeClass('unsynced');
-                        continue;
+                        break;
                     }
                     
                 }
@@ -538,7 +541,7 @@ var drinky = {
             if (monthNum>11) {
                 monthNum-=12;
             }
-            console.log("Y:", drinky.yearStats[i][1], yearStr[monthNum], monthNum)
+            //console.log("Y:", drinky.yearStats[i][1], yearStr[monthNum], monthNum)
             ticks.push(yearStr[monthNum]);
         }
         var plot1 = $.jqplot('the_graph', [plot], {
@@ -638,6 +641,7 @@ var drinky = {
      * Sync Drink action
      */
     syncDrinks: function () {
+        //console.log("SYNC")
         if (navigator.onLine) {
             $.mobile.showPageLoadingMsg();
             //build data
@@ -669,21 +673,29 @@ var drinky = {
                 
                 //See if we should remove
                 if (drink.t < now) {
+                    //console.log("We have old drink: ", drink.t, drink.s)
                     //if synced then delete
                     if (drink.s > 1) {
-
+                        //console.log("We need to remove this drink now")
                     } else {
                         //keep it
                         keepDrinks.push(drink);
+                        if(tmpDrinks[prefix+drink.d]==undefined) {
+                            tmpDrinks[prefix+drink.d] = new Array();
+                        }
+                        tmpDrinks[prefix+drink.d].push(drink.t)
+
                     }
                     //Hide it
                     $('.history .inner .t_'+drink.t).remove();
                 } else {
                     keepDrinks.push(drink);
                 }
+
             
             }
         
+            //console.log("Keep drinks", keepDrinks)
             //save drinkObj
             drinky.setDrinks(keepDrinks);
         
