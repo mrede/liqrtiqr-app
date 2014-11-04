@@ -26,8 +26,8 @@ drinkDb.short = {
     s: 1
 };
 
-//var mainUrl = "http://liqrtiqr.com";
-var mainUrl = "http://localhost:3000";
+var mainUrl = "http://liqrtiqr.com";
+//var mainUrl = "http://localhost:3000";
 //var mainUrl = "http://10.0.0.11:3000";
 
 
