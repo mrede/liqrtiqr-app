@@ -15,7 +15,7 @@
     <content src="index.html" />
     <access origin="*" />
 
-    <preference name="phonegap-version" value="3.7" />
+    <preference name="phonegap-version" value="3.7.0" />
     <preference name="fullscreen" value="true" />
 
     <icon src="images/icon-114.png" />
